@@ -98,7 +98,7 @@ public class Pac4jFilter implements Filter
           "/",
           true, false, false, null);
     } else {
-      String uid = securityLogic.perform(
+      String email = securityLogic.perform(
           context,
           pac4jConfig,
           (J2EContext ctx, Collection<CommonProfile> profiles, Object... parameters) -> {
@@ -106,14 +106,14 @@ public class Pac4jFilter implements Filter
               LOGGER.warn("No profiles found after OIDC auth.");
               return null;
             } else {
-              return profiles.iterator().next().getId();
+              return profiles.iterator().next().getEmail();
             }
           },
           NOOP_HTTP_ACTION_ADAPTER,
           null, null, null, null);
 
-      if (uid != null) {
-        AuthenticationResult authenticationResult = new AuthenticationResult(uid, authorizerName, name, null);
+      if (email != null) {
+        AuthenticationResult authenticationResult = new AuthenticationResult(email, authorizerName, name, null);
         servletRequest.setAttribute(AuthConfig.DRUID_AUTHENTICATION_RESULT, authenticationResult);
         filterChain.doFilter(servletRequest, servletResponse);
       }
